@@ -3,13 +3,13 @@ name: Build Tasbih APK
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,21 +24,35 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install Android SDK packages
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        run: |
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
 
       - name: Build release APK
-        run: gradle assembleRelease --no-daemon
+        run: gradle assembleRelease
+
+      - name: Show generated APK
+        run: |
+          echo "APK files generated:"
+          find app/build/outputs/apk -type f -name "*.apk" -print
 
       - name: Rename APK
-        run: cp app/build/outputs/apk/release/app-release.apk Tasbih.apk
+        run: |
+          APK=$(find app/build/outputs/apk/release -type f -name "*.apk" | head -n 1)
+
+          if [ -z "$APK" ]; then
+            echo "ERROR: No APK was generated."
+            exit 1
+          fi
+
+          cp "$APK" Tasbih.apk
+          echo "Created Tasbih.apk from $APK"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Tasbih-apk
+          name: Tasbih-APK
           path: Tasbih.apk
+          if-no-files-found: error
