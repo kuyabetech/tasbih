@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f766e">
+  <title>Tasbih — Digital Dhikr Counter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">۞</div>
+      <div>
+        <h1>Tasbih</h1>
+        <p>Digital Dhikr Counter</p>
+      </div>
+    </div>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Toggle theme">☾</button>
+  </header>
+
+  <main class="app-shell">
+    <section class="hero">
+      <p class="eyebrow">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <h2>Remember Allah</h2>
+      <p class="subtitle">Keep your dhikr simple, focused and consistent.</p>
+    </section>
+
+    <section class="card counter-card" aria-label="Tasbih counter">
+      <div class="controls-row">
+        <label>
+          <span>Dhikr</span>
+          <select id="dhikrSelect">
+            <option value="SubhanAllah">SubhanAllah</option>
+            <option value="Alhamdulillah">Alhamdulillah</option>
+            <option value="Allahu Akbar">Allahu Akbar</option>
+            <option value="Astaghfirullah">Astaghfirullah</option>
+            <option value="La ilaha illallah">La ilaha illallah</option>
+            <option value="custom">Custom</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Target</span>
+          <select id="targetSelect">
+            <option value="33">33</option>
+            <option value="99">99</option>
+            <option value="100">100</option>
+            <option value="custom">Custom</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="customDhikrWrap" class="custom-field hidden">
+        <label for="customDhikr">Custom dhikr</label>
+        <input id="customDhikr" type="text" maxlength="80" placeholder="Enter your dhikr">
+      </div>
+
+      <div id="customTargetWrap" class="custom-field hidden">
+        <label for="customTarget">Custom target</label>
+        <input id="customTarget" type="number" min="1" max="100000" value="33">
+      </div>
+
+      <div class="counter-area">
+        <div class="dhikr-name" id="dhikrName">SubhanAllah</div>
+        <div class="count" id="count">0</div>
+        <div class="target-text">Target: <strong id="targetText">33</strong></div>
+
+        <div class="progress-track" aria-label="Progress">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <button id="tapBtn" class="tap-btn" type="button" aria-label="Count dhikr">
+          <span>TAP</span>
+          <small>Tap to count</small>
+        </button>
+      </div>
+
+      <div class="action-row">
+        <button id="minusBtn" class="secondary-btn" type="button">−</button>
+        <button id="resetBtn" class="reset-btn" type="button">Reset</button>
+        <button id="plusBtn" class="secondary-btn" type="button">+</button>
+      </div>
+
+      <div class="settings">
+        <label class="switch-line">
+          <span>🔊 Sound</span>
+          <input id="soundToggle" type="checkbox" checked>
+        </label>
+        <label class="switch-line">
+          <span>📳 Vibration</span>
+          <input id="vibrationToggle" type="checkbox" checked>
+        </label>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="card stat">
+        <span>Today</span>
+        <strong id="todayCount">0</strong>
+      </div>
+      <div class="card stat">
+        <span>Sessions</span>
+        <strong id="sessionCount">0</strong>
+      </div>
+      <div class="card stat">
+        <span>Completed</span>
+        <strong id="completedCount">0</strong>
+      </div>
+    </section>
+
+    <section class="card tips">
+      <h3>Dhikr reminder</h3>
+      <p>“Remember Me, and I will remember you.”</p>
+      <small>Qur'an 2:152</small>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Tasbih • A simple dhikr companion</p>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
