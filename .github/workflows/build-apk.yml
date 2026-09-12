@@ -33,22 +33,43 @@ jobs:
       - name: Build release APK
         run: gradle assembleRelease
 
-      - name: Show generated APK
+      - name: Create signing key
         run: |
-          echo "APK files generated:"
-          find app/build/outputs/apk -type f -name "*.apk" -print
+          keytool -genkeypair \
+            -v \
+            -keystore tasbih-release.keystore \
+            -alias tasbih \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass android \
+            -keypass android \
+            -dname "CN=Tasbih, OU=Tasbih, O=Tasbih, L=Lagos, ST=Lagos, C=NG"
 
-      - name: Rename APK
+      - name: Sign APK
         run: |
           APK=$(find app/build/outputs/apk/release -type f -name "*.apk" | head -n 1)
 
           if [ -z "$APK" ]; then
-            echo "ERROR: No APK was generated."
+            echo "ERROR: APK was not generated"
             exit 1
           fi
 
-          cp "$APK" Tasbih.apk
-          echo "Created Tasbih.apk from $APK"
+          apksigner sign \
+            --ks tasbih-release.keystore \
+            --ks-key-alias tasbih \
+            --ks-pass pass:android \
+            --key-pass pass:android \
+            --out Tasbih.apk \
+            "$APK"
+
+      - name: Verify APK
+        run: |
+          apksigner verify --verbose Tasbih.apk
+
+      - name: Show APK
+        run: |
+          ls -lh Tasbih.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
